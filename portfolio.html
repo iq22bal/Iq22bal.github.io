@@ -26,7 +26,26 @@
                 <a href="#projects">Projects</a>
                 <a href="#contact">Contact</a>
             </div>
+                <!-- Hamburger for mobile -->
+                <button class="hamburger" aria-label="Open menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
         </div>
+            <!-- Mobile nav overlay -->
+            <div class="mobile-nav-overlay">
+                <div class="mobile-nav">
+                    <button class="close-mobile-nav" aria-label="Close menu">&times;</button>
+                    <a href="#home">Home</a>
+                    <a href="#education">Education</a>
+                    <a href="#experience">Experience</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#live-websites">Live Websites</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </div>
     </nav>
 
     <!-- Hero Section -->
@@ -485,6 +504,54 @@
             }
         }
 
+            // Mobile menu toggle
+            function setupMobileMenu() {
+                const hamburger = document.querySelector('.hamburger');
+                const mobileNavOverlay = document.querySelector('.mobile-nav-overlay');
+                const closeBtn = document.querySelector('.close-mobile-nav');
+                const mobileLinks = document.querySelectorAll('.mobile-nav a');
+
+                // Defensive: if required elements are missing, do nothing
+                if (!hamburger || !mobileNavOverlay) return;
+
+                const openMenu = () => {
+                    mobileNavOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    // focus first link for accessibility
+                    const firstLink = mobileNavOverlay.querySelector('a');
+                    if (firstLink) firstLink.focus();
+                };
+
+                const closeMenu = () => {
+                    mobileNavOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                    hamburger.focus();
+                };
+
+                hamburger.addEventListener('click', openMenu);
+
+                if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+
+                mobileLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        // allow smooth scroll handlers to run, then close
+                        setTimeout(closeMenu, 120);
+                    });
+                });
+
+                // Close when clicking outside the menu content (on overlay)
+                mobileNavOverlay.addEventListener('click', (e) => {
+                    if (e.target === mobileNavOverlay) closeMenu();
+                });
+
+                // Close on Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && mobileNavOverlay.classList.contains('active')) {
+                        closeMenu();
+                    }
+                });
+            }
+
         // Navbar scroll effect
         function handleNavbarScroll() {
             const navbar = document.querySelector('.navbar');
@@ -536,24 +603,33 @@
         // Contact form handling
         function setupContactForm() {
             const form = document.getElementById('contactForm');
+            // If contact form is not present on the page, skip setup to avoid JS errors
+            if (!form) return;
+
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
                 // Simulate form submission
                 const button = form.querySelector('button[type="submit"]');
-                const originalText = button.textContent;
+                const originalText = button ? button.textContent : '';
                 
-                button.textContent = 'Sending...';
-                button.disabled = true;
+                if (button) {
+                    button.textContent = 'Sending...';
+                    button.disabled = true;
+                }
                 
                 setTimeout(() => {
-                    button.textContent = 'Message Sent! ✓';
-                    button.style.background = '#4CAF50';
+                    if (button) {
+                        button.textContent = 'Message Sent! ✓';
+                        button.style.background = '#4CAF50';
+                    }
                     
                     setTimeout(() => {
-                        button.textContent = originalText;
-                        button.disabled = false;
-                        button.style.background = '';
+                        if (button) {
+                            button.textContent = originalText;
+                            button.disabled = false;
+                            button.style.background = '';
+                        }
                         form.reset();
                     }, 3000);
                 }, 2000);
@@ -668,6 +744,7 @@
             
             // Delay typewriter effect
             setTimeout(typewriterEffect, 1000);
+                setupMobileMenu();
         });
 
         // Performance optimization
