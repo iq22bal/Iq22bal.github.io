@@ -118,6 +118,7 @@ body {
     z-index: 2000;
     transition: opacity 0.3s ease;
     opacity: 0;
+    overflow: hidden; /* prevent background scrolling */
 }
 .mobile-nav-overlay.active {
     display: block;
@@ -129,23 +130,25 @@ body {
     align-items: stretch; /* allow links to fill width */
     justify-content: flex-start;
     height: 100vh;
-    gap: 1rem;
-    padding: 4rem 1.5rem 6rem; /* top for close button, bottom safe area */
+    gap: 1.5rem;
+    padding: 5rem 1.5rem 8rem; /* increased top/bottom padding for safety */
     box-sizing: border-box;
-    overflow-y: auto; /* enable internal scrolling */
+    overflow-y: scroll; /* force scrollbar to be always visible */
     -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+    overscroll-behavior: contain; /* prevent scroll chaining to body */
 }
 .mobile-nav a {
     color: var(--light);
     font-size: 1.4rem;
     text-decoration: none;
-    padding: 0.9rem 1.25rem;
+    padding: 1.2rem 1.25rem; /* increased touch target */
     border-radius: 12px;
     background: rgba(0,245,255,0.06);
     transition: background 0.3s, color 0.3s;
     display: block;
     width: 100%;
     text-align: center;
+    min-height: 44px; /* minimum touch target size */
 }
 .mobile-nav a:hover {
     background: var(--gradient);
